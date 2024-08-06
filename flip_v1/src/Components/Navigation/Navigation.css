@@ -1,0 +1,25 @@
+  /* Styling for the navigation flexbox */
+.navbar {
+    /* flexbox styles */
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-end;
+    /* further styling */
+    list-style: none;
+    margin: 0;
+    background-color: burlywood;
+}
+
+.navbar button {
+    text-decoration: none;
+    display: block;
+    padding: 1em;
+    color: black;
+    background-color: burlywood;
+}
+  
+.navbar button:hover {
+    background-color: brown;
+    color: white;
+}
+  

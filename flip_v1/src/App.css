@@ -1,0 +1,258 @@
+/* General App Styling */
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* HomePage Styling */
+.homepage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.homepage-title {
+  margin-bottom: 50px;
+  font-size: 3em;
+  color: #282c34;
+}
+
+.homepage-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.homepage-button {
+  width: 200px;
+  padding: 15px;
+  margin: 10px 0;
+  font-size: 1.2em;
+  color: white;
+  background-color: #61dafb;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.homepage-button:hover {
+  background-color: #21a1f1;
+}
+
+/* EventFeed Styling */
+.event-feed {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.event {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event h2 {
+  margin-top: 0;
+}
+
+.event p {
+  margin: 5px 0;
+}
+
+.event .attendees,
+.event .comments {
+  margin-top: 20px;
+}
+
+.event .attendees h4,
+.event .comments h4 {
+  margin-bottom: 10px;
+}
+
+.event .attendees ul,
+.event .comments ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.event .attendees ul li,
+.event .comments ul li {
+  padding: 5px 0;
+}
+
+.event .buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.event button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #61dafb;
+  color: white;
+  font-size: 16px;
+}
+
+.event button:hover {
+  background-color: #21a1f1;
+}
+
+/* SwipeCard Styling */
+.swipe-card {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+}
+
+.swipe-card div {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.swipe-card div:hover {
+  transform: scale(1.05);
+}
+
+/* LandingPage Styling */
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.landing-title {
+  font-size: 2.5em;
+  color: #282c34;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.landing-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.landing-button {
+  width: 80%;
+  max-width: 300px;
+  padding: 15px;
+  margin: 10px 0;
+  font-size: 1.2em;
+  color: white;
+  background-color: #61dafb;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.landing-button:hover {
+  background-color: #21a1f1;
+}
+
+@media (min-width: 768px) {
+  .landing-button {
+    width: 200px;
+  }
+}
+
+/* AuthForm Styling */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+.auth-form .form-group {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.auth-form .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.auth-form .form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.auth-form .btn-primary {
+  width: 100%;
+  padding: 10px;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 5px;
+  background-color: #61dafb;
+  color: white;
+  cursor: pointer;
+}
+
+.auth-form .btn-primary:hover {
+  background-color: #21a1f1;
+}
