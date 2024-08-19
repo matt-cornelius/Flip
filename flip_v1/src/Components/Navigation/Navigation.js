@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import './Navigation.css';
+import '../../App.css'
 
 const Navigation = () => {
   return (
@@ -8,11 +8,8 @@ const Navigation = () => {
       <Link to="/">
         <button>Home</button>
       </Link>
-      <Link to="/EventFeed">
-        <button>Event Feed</button>
-      </Link>
-      <Link to="/Event">
-        <button>Make New Event</button>
+      <Link to="/Bet">
+        <button>Make New Bet</button>
       </Link>
       <Link to="/Profile">
         <button>Profile</button>
@@ -22,4 +19,3 @@ const Navigation = () => {
 };
 
 export default Navigation;
-
