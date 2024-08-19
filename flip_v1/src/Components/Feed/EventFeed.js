@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getPublicEvents, removeEvent } from "../../Services/Event/EventService";
 import { getCommentsByEvent, removeComment, getAllComments } from '../../Services/CommentService';
 import { getAttendanceByEvent, removeAttendanceByUserAndEvent, getAllAttendances, createAttendance } from "../../Services/AttendanceService";
-import { getUser } from "../../Services/Auth/AuthService";
+import { getUser, logOut } from "../../Services/Auth/AuthService"; // Ensure AuthService is correctly imported
 import SwipeCard from '../SwipeCard/SwipeCard'; // Import SwipeCard component
 import '../../App.css'; // Import the updated CSS file
 
@@ -14,7 +14,7 @@ const EventFeed = () => {
   const [attendances, setAttendances] = useState([]);
   const [userAttendances, setUserAttendances] = useState({});
   const navigate = useNavigate(); // Initialize navigate
-  const currentUser = getUser(); // Get the current user
+  const [currentUser, setCurrentUser] = useState(null); // Use state for currentUser
 
   const fetchEvents = async () => {
     const events = await getPublicEvents();
@@ -23,30 +23,43 @@ const EventFeed = () => {
   };
 
   useEffect(() => {
-    fetchEvents();
+    try {
+      const user = getUser();
+      setCurrentUser(user);
+      fetchEvents();
 
-    getAllComments().then((comments) => {
-      console.log("Fetched comments:", comments);
-      setComments(comments);
-    });
-
-    getAllAttendances().then((attendances) => {
-      console.log("Fetched attendances:", attendances);
-      setAttendances(attendances);
-      // Initialize userAttendances
-      const userAttendances = {};
-      attendances.forEach(attendance => {
-        if (attendance.get("attendee").id === currentUser.id) {
-          const eventId = attendance.get("event").id;
-          if (!userAttendances[eventId]) {
-            userAttendances[eventId] = [];
-          }
-          userAttendances[eventId].push(attendance);
-        }
+      getAllComments().then((comments) => {
+        console.log("Fetched comments:", comments);
+        setComments(comments);
       });
-      setUserAttendances(userAttendances);
-    });
-  }, [currentUser.id]);
+
+      getAllAttendances().then((attendances) => {
+        console.log("Fetched attendances:", attendances);
+        setAttendances(attendances);
+        // Initialize userAttendances
+        const userAttendances = {};
+        attendances.forEach(attendance => {
+          if (attendance.get("attendee").id === user.id) {
+            const eventId = attendance.get("event").id;
+            if (!userAttendances[eventId]) {
+              userAttendances[eventId] = [];
+            }
+            userAttendances[eventId].push(attendance);
+          }
+        });
+        setUserAttendances(userAttendances);
+      });
+    } catch (error) {
+      console.error("Error fetching user or events:", error);
+      if (error.message === "No user is currently logged in.") {
+        // Redirect to login page
+        navigate("/login");
+      } else if (error.message.includes("Invalid session token")) {
+        // Log out and redirect to login
+        navigate("/login");
+      }
+    }
+  }, [navigate]);
 
   const handleDelete = async (id) => {
     const eventComments = await getCommentsByEvent(id);
@@ -105,65 +118,67 @@ const EventFeed = () => {
   };
 
   return (
-    <div className="event-feed">
-      <h1>Event Feed</h1>
-      <ul>
-        {events.map((event) => {
-          console.log("Rendering event:", event);
-          return (
-            <li key={event.id} className="event">
-              <div className="swipe-card">
-                <SwipeCard event={event} onSwipeRight={handleRSVP} /> {/* Use SwipeCard component */}
-              </div>
-              <h2>{event.get("title")}</h2>
-              <p>{event.get("description")}</p>
-              <p>Location: {event.get("location")}</p>
-              <p>Start: {formatDate(event.get("start"))}</p>
-              <p>End: {formatDate(event.get("end"))}</p>
-              <p>Author: {event.get("author").get("firstName")} {event.get("author").get("lastName")}</p>
-              <ul className="attendees">
-                <h4>Attendees:</h4>
-                {attendances.filter(attendance => attendance.get("event").id === event.id).map((attendance) => {
-                  const attendee = attendance.get("attendee");
-                  return attendee ? (
-                    <li key={attendance.id}>
-                      <p>{attendee.get("firstName")} {attendee.get("lastName")}</p>
-                    </li>
-                  ) : null;
-                })}
-                {userAttendances[event.id]?.map((attendance) => {
-                  const { attendee } = attendance;
-                  return attendee ? (
-                    <li key={attendance.id}>
-                      <p>{attendee.get("firstName")} {attendee.get("lastName")}</p>
-                    </li>
-                  ) : null;
-                })}
-              </ul>
-              <div className="comments">
-                <br />
-                <h4>Comments:</h4>
-                <ul>
-                  {comments.filter(comment => comment.get("event").id === event.id).map((comment) => (
-                    <li key={comment.id}>
-                      <p>{comment.get("text")}</p>
-                      <p>Author: {comment.get("author").get("firstName")} {comment.get("author").get("lastName")}</p>
-                    </li>
-                  ))}
-                </ul>
-                <hr />
-              </div>
-              {event.get("author").id === currentUser.id && (
-                <div className="buttons">
-                  <button onClick={() => handleEdit(event.id)}>Edit</button>
-                  <button onClick={() => handleDelete(event.id)}>Delete</button>
+    <div className="event-feed-container">
+      <div className="event-feed">
+        <h1>Event Feed</h1>
+        <ul>
+          {events.map((event) => {
+            console.log("Rendering event:", event);
+            return (
+              <li key={event.id} className="event">
+                <div className="swipe-card">
+                  <SwipeCard event={event} onSwipeRight={handleRSVP} /> {/* Use SwipeCard component */}
                 </div>
-              )}
-              <button onClick={() => handleRSVP(event)}>RSVP</button>
-            </li>
-          );
-        })}
-      </ul>
+                <h2>{event.get("title")}</h2>
+                <p>{event.get("description")}</p>
+                <p>Location: {event.get("location")}</p>
+                <p>Start: {formatDate(event.get("start"))}</p>
+                <p>End: {formatDate(event.get("end"))}</p>
+                <p>Author: {event.get("author").get("firstName")} {event.get("author").get("lastName")}</p>
+                <ul className="attendees">
+                  <h4>Attendees:</h4>
+                  {attendances.filter(attendance => attendance.get("event").id === event.id).map((attendance) => {
+                    const attendee = attendance.get("attendee");
+                    return attendee ? (
+                      <li key={attendance.id}>
+                        <p>{attendee.get("firstName")} {attendee.get("lastName")}</p>
+                      </li>
+                    ) : null;
+                  })}
+                  {userAttendances[event.id]?.map((attendance) => {
+                    const { attendee } = attendance;
+                    return attendee ? (
+                      <li key={attendance.id}>
+                        <p>{attendee.get("firstName")} {attendee.get("lastName")}</p>
+                      </li>
+                    ) : null;
+                  })}
+                </ul>
+                <div className="comments">
+                  <br />
+                  <h4>Comments:</h4>
+                  <ul>
+                    {comments.filter(comment => comment.get("event").id === event.id).map((comment) => (
+                      <li key={comment.id}>
+                        <p>{comment.get("text")}</p>
+                        <p>Author: {comment.get("author").get("firstName")} {comment.get("author").get("lastName")}</p>
+                      </li>
+                    ))}
+                  </ul>
+                  <hr />
+                </div>
+                {event.get("author").id === currentUser.id && (
+                  <div className="buttons">
+                    <button onClick={() => handleEdit(event.id)}>Edit</button>
+                    <button onClick={() => handleDelete(event.id)}>Delete</button>
+                  </div>
+                )}
+                <button onClick={() => handleRSVP(event)}>RSVP</button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
       <Navigation />
     </div>
   );

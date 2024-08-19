@@ -16,6 +16,10 @@ import EditEvent from "./Event/EditEvent.js"
 import Profile from "./Profile/Profile.js";
 import Event from "./Event/Event.js";
 import LandingPage from "./Main/LandingPage.js";
+import Bet from "./Bet/Bet.js";
+import BetFeed from "./Feed/BetFeed.js";
+import AcceptBetForm from "./Bet/AcceptBetForm.js";
+import EditBet from "./Bet/EditBet.js";
 
 // Routes are enumerated below, with two routes being protected.
 export default function Components() {
@@ -36,6 +40,10 @@ export default function Components() {
           element={<ProtectedRoute path="/EventFeed" element={EventFeed} />}
         />
         <Route
+          path="/BetFeed"
+          element={<ProtectedRoute path="/BetFeed" element={BetFeed} />}
+        />
+        <Route
           path="/Profile"
           element={<ProtectedRoute path="/Profile" element={Profile} />}
         />
@@ -44,8 +52,20 @@ export default function Components() {
           element={<ProtectedRoute path="/Event" element={Event} />}
         />
         <Route
+          path="/Bet"
+          element={<ProtectedRoute path="/Bet" element={Bet} />}
+        />
+        <Route
+          path="/accept-bet"
+          element={<ProtectedRoute path="/AcceptBet" element={AcceptBetForm} />}
+        />
+        <Route
           path="/edit-event/:eventId"
-          element={<ProtectedRoute element={EditEvent} />}
+          element={<ProtectedRoute path="/edit-event/:eventId" element={EditEvent} />}
+        />
+        <Route 
+          path="/edit-bet/:betId" 
+          element={<ProtectedRoute element={<EditBet />} />}
         />
         
         <Route path="*" element={<Navigate to="/LandingPage" replace />} />
